@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kedai RasaNusa Kopi & Roastery — RasaNusa F&B Suite (Arraihan Academy)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: #f8fafc; color: #1e293b; -webkit-tap-highlight-color: transparent; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    .hidden { display: none !important; }
+    button { cursor: pointer; }
+    input, select, textarea { font-family: inherit; }
+    @media print {
+      body * { visibility: hidden; }
+      #modal-container, #modal-container * { visibility: visible; }
+      #modal-container { position: absolute; inset: 0; background: #fff !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-box" class="hidden fixed top-4 right-4 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 text-xs font-bold flex items-center gap-2 no-print"></div>
+
+  <!-- SIDEBAR NAVIGATION (6 MODUL LENGKAP) -->
+  <aside class="w-full md:w-64 bg-slate-900 text-slate-100 flex flex-col shrink-0 border-r border-slate-800 no-print">
+    <div data-action="switch-tab" data-tab="settings" class="p-4 flex items-center gap-3 border-b border-slate-800 cursor-pointer hover:bg-slate-800/60 transition">
+      <div id="sidebar-logo" class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white shadow text-xl shrink-0">🍴</div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-1.5">
+          <h1 id="sidebar-short-name" class="font-extrabold text-sm text-white truncate">RasaNusa</h1>
+          <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30">PRO</span>
+        </div>
+        <p id="sidebar-full-name" class="text-[11px] text-slate-400 truncate">Kedai RasaNusa Kopi & Roastery</p>
+      </div>
+    </div>
+
+    <!-- PRE-RENDERED NAV BUTTONS AGAR LANGSUNG TAMPIL -->
+    <nav id="sidebar-nav" class="p-2.5 flex md:flex-col gap-1 overflow-x-auto md:overflow-visible">
+      <button data-action="switch-tab" data-tab="pos" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md"><div class="flex items-center gap-2.5"><span>🛒</span><span>Kasir (POS)</span></div></button>
+      <button data-action="switch-tab" data-tab="kds" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 text-slate-400 hover:bg-slate-800 hover:text-white"><div class="flex items-center gap-2.5"><span>👨‍🍳</span><span>Antrean Dapur</span></div></button>
+      <button data-action="switch-tab" data-tab="inventory" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 text-slate-400 hover:bg-slate-800 hover:text-white"><div class="flex items-center gap-2.5"><span>📦</span><span>Inventori & Stok</span></div></button>
+      <button data-action="switch-tab" data-tab="promo" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 text-slate-400 hover:bg-slate-800 hover:text-white"><div class="flex items-center gap-2.5"><span>🌐</span><span>Web Promosi & Toko</span></div></button>
+      <button data-action="switch-tab" data-tab="analytics" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 text-slate-400 hover:bg-slate-800 hover:text-white"><div class="flex items-center gap-2.5"><span>📊</span><span>Laporan & Keuangan</span></div></button>
+      <button data-action="switch-tab" data-tab="settings" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 text-slate-400 hover:bg-slate-800 hover:text-white"><div class="flex items-center gap-2.5"><span>⚙️</span><span>Pengaturan & Akun</span></div></button>
+    </nav>
+
+    <div class="mt-auto p-3.5 hidden md:block border-t border-slate-800 space-y-2">
+      <div class="bg-slate-800/90 rounded-xl p-3 border border-slate-700/60">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 min-w-0">
+            <span id="active-user-avatar" class="text-lg">👩‍💼</span>
+            <div class="min-w-0">
+              <p id="active-user-name" class="text-xs font-bold text-white truncate">Nadia Putri</p>
+              <p id="active-user-role" class="text-[10px] text-orange-400 truncate">@nadia • Kasir Utama</p>
+            </div>
+          </div>
+          <button data-action="open-lock" class="px-2 py-1 rounded-lg bg-slate-700 hover:bg-orange-500 text-[10px] font-bold text-white transition">🔒 Kunci</button>
+        </div>
+        <div class="pt-2 mt-2 border-t border-slate-700/60 flex justify-between text-[11px]">
+          <span class="text-slate-400">Omzet Hari Ini:</span>
+          <span id="sidebar-omzet" class="font-bold text-amber-400">Rp 323.400</span>
+        </div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-2.5 border border-orange-500/20 text-[10px] space-y-0.5">
+        <div class="text-amber-400 font-extrabold">🛡️ Licensed by Arraihan Academy</div>
+        <div class="text-slate-400 font-mono text-[9.5px]">developwebapp11@gmail.com</div>
+        <div id="sidebar-folder-info" class="text-emerald-400 font-semibold truncate">📁 /RasaNusa_FnB_Cloud_Storage</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 no-print">
+      <div>
+        <h2 id="header-title" class="text-base sm:text-lg font-extrabold text-slate-900">Sistem Kasir Pintar (POS)</h2>
+        <p id="header-subtitle" class="text-[11px] text-slate-500">Kedai RasaNusa Kopi & Roastery • Kasir: <b>Nadia Putri</b> • <span class="text-orange-600 font-bold">Licensed by Arraihan Academy</span></p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span id="net-status-badge" class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold border bg-emerald-50 border-emerald-200 text-emerald-800">🟢 ONLINE</span>
+        <button data-action="sync-drive" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold">☁️ Simpan ke 1 Folder Drive <span id="queue-badge"></span></button>
+        <button data-action="switch-tab" data-tab="promo" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold">🌐 Web Toko</button>
+        <button data-action="open-lock" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold">🔒 Ganti Kasir</button>
+      </div>
+    </header>
+
+    <!-- DYNAMIC VIEW CONTAINER (PRE-RENDERED INITIAL POS VIEW) -->
+    <div id="view-container" class="flex-1 overflow-y-auto p-4 sm:p-6 no-print">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5"><div data-action="add-pos-cart" data-id="m1" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🧋</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 42 Cup</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Minuman</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Kopi Susu Gula Aren</h4><p class="text-[11px] text-slate-500 mt-1">Espresso house blend dengan gula aren organik asli dan fresh milk creamy.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 22.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m2" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍛</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 18 Porsi</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Makanan Utama</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Nasi Goreng Kampung Spesial</h4><p class="text-[11px] text-slate-500 mt-1">Nasi goreng rempah tradisional dengan sate ayam, telur mata sapi, dan kerupuk udang.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 35.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m3" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍜</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 8 Porsi</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Makanan Utama</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Mie Tek-Tek Kuah Jawa</h4><p class="text-[11px] text-slate-500 mt-1">Mie kuning masak arang dengan kaldu ayam kampung kental, suwiran ayam, dan sayuran segar.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 30.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m4" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍵</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 25 Cup</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Minuman</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Uji Matcha Latte Oat</h4><p class="text-[11px] text-slate-500 mt-1">Pure ceremonial grade matcha dari Kyoto dipadukan dengan susu gandum (oat milk) pilihan.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 28.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m5" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍌</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 5 Porsi</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Camilan</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Pisang Bakar Cokelat Keju</h4><p class="text-[11px] text-slate-500 mt-1">Pisang raja pilihan dipanggang mentega dengan taburan meses ceres dan parutan keju melimpah.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 20.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m6" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🥐</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 14 Pcs</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Camilan</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Butter Croissant Renyah</h4><p class="text-[11px] text-slate-500 mt-1">Pastry berlapis dengan French butter premium, dipanggang hangat setiap pagi.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 24.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m7" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍗</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 22 Porsi</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Makanan Utama</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Ayam Geprek Sambal Bawang</h4><p class="text-[11px] text-slate-500 mt-1">Ayam krispi dada/paha digeprek dengan sambal bawang ulek dadakan, lengkap dengan nasi hangat.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 28.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m8" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🍹</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 35 Cup</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Minuman</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Es Teh Leci Segar</h4><p class="text-[11px] text-slate-500 mt-1">Seduhan teh melati pilihan dengan sirup leci asli dan 2 buah leci segar di dalamnya.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 18.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div><div data-action="add-pos-cart" data-id="m9" class="cursor-pointer bg-white rounded-2xl border border-slate-200 hover:border-orange-400 p-4 flex flex-col justify-between transition shadow-sm"><div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">🧆</div><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">Stok: 3 Porsi</span></div><div class="text-[10px] font-bold uppercase text-slate-400">Camilan</div><h4 class="font-bold text-slate-900 text-sm mt-0.5">Tahu Cabai Garam Crispy</h4><p class="text-[11px] text-slate-500 mt-1">Potongan tahu sutra goreng tepung renyah ditumis dengan bawang putih, daun bawang, dan cabai rawit.</p></div><div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">Rp 19.000</span><span class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-xs font-bold">+ Tambah</span></div></div></div>
+    </div>
+
+    <!-- FOOTER LISENSI RESMI -->
+    <footer class="bg-white border-t border-slate-200 px-4 sm:px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500 no-print">
+      <div><b id="footer-store-name" class="text-slate-800">Kedai RasaNusa Kopi & Roastery</b> • Penyimpanan 1 Folder Drive: <code id="footer-folder-name" class="text-emerald-700 font-bold">/RasaNusa_FnB_Cloud_Storage/</code></div>
+      <div>🛡️ Licensed by <b class="text-slate-900">Arraihan Academy</b> (<a href="mailto:developwebapp11@gmail.com" class="text-orange-600 font-bold underline">developwebapp11@gmail.com</a>)</div>
+    </footer>
+  </main>
+
+  <!-- MODAL CONTAINER (STRUK, WA, LOCK SCREEN) -->
+  <div id="modal-container" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4"></div>
+
+  <script>
+    // --- 1. SAFE STORAGE & STATE INITIALIZATION ---
+    var MEM_STORE = {};
+    function safeGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return MEM_STORE[k] || null; } }
+    function safeSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { MEM_STORE[k] = v; } }
+
+    var DEFAULT_STATE = {"license":{"holder":"Arraihan Academy","email":"developwebapp11@gmail.com","productName":"RasaNusa F&B Suite Enterprise","version":"v3.5 Cloud Single-Folder Edition","storageArchitecture":"100% Single Google Drive Folder Workspace","year":2026},"storeProfile":{"name":"Kedai RasaNusa Kopi & Roastery","shortName":"RasaNusa","tagline":"Cita Rasa Otentik Nusantara dalam Setiap Sajian Hangat","bannerText":"🎉 PROMO SPESIAL: Gunakan Kode HEMAT15 untuk Diskon 15% Semua Menu Hari Ini!","address":"Jl. Kemang Raya No. 45, Jakarta Selatan","whatsapp":"0812-3456-7890","instagram":"@rasanusa.id","openHours":"08:00 - 22:00 WIB","acceptOnlineOrder":true,"logoType":"preset","logoPreset":"utensils","logoImageUrl":""},"posConfig":{"enableTax":true,"taxRate":10,"enableService":false,"serviceRate":5,"paperSize":"58mm","showLogoOnReceipt":true,"receiptHeader":"Struk Pembayaran Resmi","receiptFooter":"Terima kasih telah berkunjung! Simpan struk ini sebagai bukti pembayaran yang sah.","qrisMerchantName":"RASANUSA F&B INDONESIA","bankAccountInfo":"BCA 8720-1928-31 a/n Kedai RasaNusa","enabledPayments":{"QRIS":true,"Tunai":true,"Debit/Transfer":true,"E-Wallet":true}},"waConfig":{"mode":"direct","gatewayProvider":"Fonnte API","apiUrl":"https://api.fonnte.com/send","apiToken":"TOKEN_FONNTE_UMKM_ANDA","autoSendOnReady":true,"autoOpenPreviewOnCheckout":false,"receiptTemplate":"Halo Kak *{nama}*! 👋\nTerima kasih telah berbelanja di *{nama_toko}*.\n\n🧾 *STRUK PEMBAYARAN DIGITAL*\nNo. Order : *{id_pesanan}*\nWaktu : {waktu}\nTipe : {tipe_order} ({meja})\nMetode : {metode_bayar}\n--------------------------------\n{daftar_menu}\n--------------------------------\nSubtotal : {subtotal}\nDiskon : -{diskon}\nPajak PB1 : {pajak}\n*TOTAL LUNAS : {total}*\n\nPesanan Kakak sedang diproses oleh dapur kami. Mohon ditunggu ya! 🙏","readyTemplate":"🔔 *PESANAN SIAP DIAMBIL / DISAJIKAN!*\n\nHalo Kak *{nama}*, pesanan Anda dengan nomor *{id_pesanan}* di *{nama_toko}* sudah matang dan siap!\n\n📋 *Rincian Menu:*\n{daftar_menu}\n\n📍 *Info Pengambilan / Meja:* {tipe_order} ({meja})\n\nSilakan ambil pesanan di counter Pickup atau tunggu pramusaji/kurir kami mengantarkannya. Selamat menikmati! 🍽️✨"},"cloudConfig":{"gasWebAppUrl":"https://script.google.com/macros/s/AKfycbxXjByrNtGlhXdatZt0UtaLOeNUwcLTd29R3rQeUaXwGVY-cUIu1GGHwYFuSPMSho_6/exec","rootFolderName":"RasaNusa_FnB_Cloud_Storage","spreadsheetName":"RasaNusa_Database_Utama","logoSubfolderName":"Assets_Logo_Menu","receiptSubfolderName":"Arsip_Struk_Laporan","backupSubfolderName":"Backup_JSON_Harian","autoCompressImage":true,"syncStatus":"Tersinkron ke /RasaNusa_FnB_Cloud_Storage/","lastSync":"Hari ini, 18.42 WIB"},"staffList":[{"id":"u1","name":"Nadia Putri","username":"nadia","password":"password123","pin":"1234","role":"Kasir Utama","avatar":"👩‍💼","active":true,"lastLogin":"Hari ini, 07:55 WIB"},{"id":"u2","name":"Hendra Wijaya","username":"admin","password":"admin123","pin":"9999","role":"Owner / Manajer","avatar":"👨‍💼","active":true,"lastLogin":"Hari ini, 09:10 WIB"},{"id":"u3","name":"Chef Bagus Santoso","username":"dapur","password":"dapur123","pin":"5555","role":"Kepala Dapur (KDS)","avatar":"👨‍🍳","active":true,"lastLogin":"Hari ini, 08:00 WIB"}],"products":[{"id":"m1","name":"Kopi Susu Gula Aren","category":"Minuman","price":22000,"cost":9000,"stock":42,"minStock":15,"unit":"Cup","isBestSeller":true,"emoji":"🧋","color":"from-amber-100 to-orange-100 text-amber-900","desc":"Espresso house blend dengan gula aren organik asli dan fresh milk creamy."},{"id":"m2","name":"Nasi Goreng Kampung Spesial","category":"Makanan Utama","price":35000,"cost":16000,"stock":18,"minStock":10,"unit":"Porsi","isBestSeller":true,"emoji":"🍛","color":"from-orange-100 to-red-100 text-orange-900","desc":"Nasi goreng rempah tradisional dengan sate ayam, telur mata sapi, dan kerupuk udang."},{"id":"m3","name":"Mie Tek-Tek Kuah Jawa","category":"Makanan Utama","price":30000,"cost":13000,"stock":8,"minStock":10,"unit":"Porsi","isBestSeller":false,"emoji":"🍜","color":"from-yellow-100 to-amber-100 text-yellow-900","desc":"Mie kuning masak arang dengan kaldu ayam kampung kental, suwiran ayam, dan sayuran segar."},{"id":"m4","name":"Uji Matcha Latte Oat","category":"Minuman","price":28000,"cost":12000,"stock":25,"minStock":10,"unit":"Cup","isBestSeller":true,"emoji":"🍵","color":"from-emerald-100 to-teal-100 text-emerald-900","desc":"Pure ceremonial grade matcha dari Kyoto dipadukan dengan susu gandum (oat milk) pilihan."},{"id":"m5","name":"Pisang Bakar Cokelat Keju","category":"Camilan","price":20000,"cost":8000,"stock":5,"minStock":8,"unit":"Porsi","isBestSeller":false,"emoji":"🍌","color":"from-yellow-100 to-orange-100 text-amber-900","desc":"Pisang raja pilihan dipanggang mentega dengan taburan meses ceres dan parutan keju melimpah."},{"id":"m6","name":"Butter Croissant Renyah","category":"Camilan","price":24000,"cost":10000,"stock":14,"minStock":8,"unit":"Pcs","isBestSeller":false,"emoji":"🥐","color":"from-amber-50 to-yellow-100 text-amber-800","desc":"Pastry berlapis dengan French butter premium, dipanggang hangat setiap pagi."},{"id":"m7","name":"Ayam Geprek Sambal Bawang","category":"Makanan Utama","price":28000,"cost":13000,"stock":22,"minStock":10,"unit":"Porsi","isBestSeller":true,"emoji":"🍗","color":"from-red-100 to-rose-100 text-red-900","desc":"Ayam krispi dada/paha digeprek dengan sambal bawang ulek dadakan, lengkap dengan nasi hangat."},{"id":"m8","name":"Es Teh Leci Segar","category":"Minuman","price":18000,"cost":6000,"stock":35,"minStock":15,"unit":"Cup","isBestSeller":false,"emoji":"🍹","color":"from-rose-100 to-pink-100 text-rose-900","desc":"Seduhan teh melati pilihan dengan sirup leci asli dan 2 buah leci segar di dalamnya."},{"id":"m9","name":"Tahu Cabai Garam Crispy","category":"Camilan","price":19000,"cost":7000,"stock":3,"minStock":10,"unit":"Porsi","isBestSeller":true,"emoji":"🧆","color":"from-orange-50 to-amber-100 text-orange-950","desc":"Potongan tahu sutra goreng tepung renyah ditumis dengan bawang putih, daun bawang, dan cabai rawit."}],"ingredients":[{"id":"b1","name":"Biji Kopi Arabika Gayo","stock":4.5,"minStock":5,"unit":"Kg","costPerUnit":165000,"category":"Bahan Minuman"},{"id":"b2","name":"Susu Fresh Milk Full Cream","stock":24,"minStock":12,"unit":"Liter","costPerUnit":21000,"category":"Bahan Minuman"},{"id":"b3","name":"Gula Aren Cair Organik","stock":3,"minStock":5,"unit":"Liter","costPerUnit":45000,"category":"Bahan Minuman"},{"id":"b4","name":"Beras Pandan Wangi Premium","stock":35,"minStock":15,"unit":"Kg","costPerUnit":15000,"category":"Bahan Makanan"},{"id":"b5","name":"Daging Ayam Fillet Segar","stock":12,"minStock":8,"unit":"Kg","costPerUnit":42000,"category":"Bahan Makanan"},{"id":"b6","name":"Cup Plastik 16oz + Lid Sablon","stock":340,"minStock":100,"unit":"Pcs","costPerUnit":1200,"category":"Kemasan"}],"promos":[{"id":"p1","code":"HEMAT15","title":"Diskon Spesial Pelanggan 15%","type":"PERCENT","value":15,"minOrder":50000,"active":true},{"id":"p2","code":"NGOPI10K","title":"Potongan Langsung Rp 10.000","type":"NOMINAL","value":10000,"minOrder":40000,"active":true},{"id":"p3","code":"UMKMBANGKIT","title":"Promo Gajian 20%","type":"PERCENT","value":20,"minOrder":100000,"active":true}],"orders":[{"id":"ORD-8821","customerName":"Budi Santoso","customerPhone":"081288991122","orderType":"Dine-In","tableNumber":"04","source":"POS Kasir","time":"14:15 WIB","status":"Sedang Dimasak","paymentMethod":"QRIS","subtotal":79000,"discount":0,"tax":7900,"total":86900,"waNotified":false,"items":[{"id":"m1","name":"Kopi Susu Gula Aren","price":22000,"qty":2,"emoji":"🧋"},{"id":"m2","name":"Nasi Goreng Kampung Spesial","price":35000,"qty":1,"emoji":"🍛"}]},{"id":"ORD-8822","customerName":"Siti Sarah (Web Order)","customerPhone":"081377665544","orderType":"Delivery","tableNumber":"Jl. Bangka Raya No. 12B","source":"Web Promosi","time":"14:22 WIB","status":"Baru Masuk","paymentMethod":"QRIS","subtotal":80000,"discount":12000,"tax":6800,"total":74800,"waNotified":false,"items":[{"id":"m4","name":"Uji Matcha Latte Oat","price":28000,"qty":2,"emoji":"🍵"},{"id":"m6","name":"Butter Croissant Renyah","price":24000,"qty":1,"emoji":"🥐"}]},{"id":"ORD-8820","customerName":"Andi Pratama","customerPhone":"085711223344","orderType":"Takeaway","tableNumber":"-","source":"POS Kasir","time":"13:50 WIB","status":"Siap Disajikan","paymentMethod":"Tunai","subtotal":48000,"discount":0,"tax":4800,"total":52800,"waNotified":true,"items":[{"id":"m7","name":"Ayam Geprek Sambal Bawang","price":28000,"qty":1,"emoji":"🍗"},{"id":"m5","name":"Pisang Bakar Cokelat Keju","price":20000,"qty":1,"emoji":"🍌"}]},{"id":"ORD-8819","customerName":"Rina Wijaya","customerPhone":"081944556677","orderType":"Dine-In","tableNumber":"01","source":"POS Kasir","time":"13:10 WIB","status":"Selesai","paymentMethod":"Debit/Transfer","subtotal":109000,"discount":10000,"tax":9900,"total":108900,"waNotified":true,"items":[{"id":"m2","name":"Nasi Goreng Kampung Spesial","price":35000,"qty":2,"emoji":"🍛"},{"id":"m9","name":"Tahu Cabai Garam Crispy","price":19000,"qty":1,"emoji":"🧆"},{"id":"m5","name":"Pisang Bakar Cokelat Keju","price":20000,"qty":1,"emoji":"🍌"}]}]};
+    var APP = loadSavedState();
+    var currentTab = "pos";
+    var posCategory = "Semua";
+    var posSearch = "";
+    var cart = [{ id: "m1", name: "Kopi Susu Gula Aren", price: 22000, qty: 1, emoji: "🧋" }];
+    var posCustomer = "Pelanggan Umum";
+    var posPhone = "081299887766";
+    var posOrderType = "Dine-In";
+    var posTable = "05";
+    var posPromo = "";
+    var posPayment = "QRIS";
+    var posCash = "";
+    var webCart = [];
+    var activeUser = (APP.staffList && APP.staffList[0]) ? APP.staffList[0] : { name: "Nadia Putri", username: "nadia", password: "password123", pin: "1234", role: "Kasir Utama", avatar: "👩‍💼" };
+    var NL = String.fromCharCode(10);
+
+    function loadSavedState() {
+      try {
+        var saved = safeGet("RASANUSA_FULL_STATE_V41");
+        if (saved) {
+          var parsed = JSON.parse(saved);
+          return Object.assign({}, DEFAULT_STATE, parsed);
+        }
+      } catch (e) {}
+      return DEFAULT_STATE;
+    }
+
+    function saveStateLocal() {
+      try { safeSet("RASANUSA_FULL_STATE_V41", JSON.stringify(APP)); } catch (e) {}
+    }
+
+    function formatIDR(num) {
+      return "Rp " + Number(num || 0).toLocaleString("id-ID");
+    }
+
+    function normalizeWA(phone) {
+      if (!phone) return "";
+      var c = String(phone).replace(/\D/g, "");
+      if (c.indexOf("0") === 0) return "62" + c.slice(1);
+      if (c.indexOf("8") === 0) return "62" + c;
+      return c;
+    }
+
+    function showToast(msg) {
+      var box = document.getElementById("toast-box");
+      if (!box) return;
+      box.textContent = "✅ " + msg;
+      box.classList.remove("hidden");
+      setTimeout(function() { box.classList.add("hidden"); }, 3200);
+    }
+
+    function getLogoHtml(sizeCls) {
+      if (APP.storeProfile && APP.storeProfile.logoType === "image" && APP.storeProfile.logoImageUrl) {
+        return '<img src="' + APP.storeProfile.logoImageUrl + '" class="' + sizeCls + ' rounded-xl object-cover bg-white border border-white/20 shrink-0" />';
+      }
+      var presets = { utensils: "🍴", coffee: "☕", noodle: "🍜", bakery: "🥐", boba: "🧋", grill: "🔥" };
+      var emo = presets[(APP.storeProfile && APP.storeProfile.logoPreset) || "utensils"] || "🍴";
+      return '<div class="' + sizeCls + ' rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white shadow shrink-0">' + emo + '</div>';
+    }
+
+    // --- 2. RENDER SHELL & SIDEBAR ---
+    function renderShell() {
+      document.getElementById("sidebar-logo").outerHTML = '<div id="sidebar-logo">' + getLogoHtml("w-10 h-10 text-xl") + '</div>';
+      document.getElementById("sidebar-short-name").textContent = APP.storeProfile.shortName || APP.storeProfile.name;
+      document.getElementById("sidebar-full-name").textContent = APP.storeProfile.name;
+      document.getElementById("active-user-avatar").textContent = activeUser.avatar || "👩‍💼";
+      document.getElementById("active-user-name").textContent = activeUser.name;
+      document.getElementById("active-user-role").textContent = "@" + activeUser.username + " • " + activeUser.role;
+      var totalOmzet = (APP.orders || []).reduce(function(s, o) { return s + (Number(o.total) || 0); }, 0);
+      document.getElementById("sidebar-omzet").textContent = formatIDR(totalOmzet);
+      document.getElementById("sidebar-folder-info").textContent = "📁 /" + (APP.cloudConfig.rootFolderName || "RasaNusa_FnB_Cloud_Storage");
+      document.getElementById("footer-store-name").textContent = APP.storeProfile.name;
+      document.getElementById("footer-folder-name").textContent = "/" + (APP.cloudConfig.rootFolderName || "RasaNusa_FnB_Cloud_Storage") + "/";
+      document.getElementById("header-subtitle").innerHTML = APP.storeProfile.name + " • Kasir: <b>" + activeUser.name + "</b> • <span class=\"text-orange-600 font-bold\">Licensed by Arraihan Academy</span>";
+      updateNetBadge();
+
+      var activeKds = (APP.orders || []).filter(function(o) { return o.status !== "Selesai"; }).length;
+      var lowStock = (APP.products || []).filter(function(p) { return p.stock <= p.minStock; }).length;
+      var cartCount = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+
+      var tabs = [
+        { id: "pos", icon: "🛒", label: "Kasir (POS)", badge: cartCount },
+        { id: "kds", icon: "👨‍🍳", label: "Antrean Dapur", badge: activeKds },
+        { id: "inventory", icon: "📦", label: "Inventori & Stok", badge: lowStock },
+        { id: "promo", icon: "🌐", label: "Web Promosi & Toko", badge: "LIVE" },
+        { id: "analytics", icon: "📊", label: "Laporan & Keuangan", badge: 0 },
+        { id: "settings", icon: "⚙️", label: "Pengaturan & Akun", badge: 0 }
+      ];
+
+      document.getElementById("sidebar-nav").innerHTML = tabs.map(function(t) {
+        var active = currentTab === t.id;
+        var cls = active ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md" : "text-slate-400 hover:bg-slate-800 hover:text-white";
+        var badgeHtml = t.badge ? '<span class="text-[10px] px-2 py-0.5 rounded-full font-extrabold ' + (active ? "bg-white text-orange-600" : "bg-orange-500/20 text-orange-400") + '">' + t.badge + '</span>' : "";
+        return '<button data-action="switch-tab" data-tab="' + t.id + '" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition shrink-0 ' + cls + '">' +
+          '<div class="flex items-center gap-2.5"><span>' + t.icon + '</span><span>' + t.label + '</span></div>' + badgeHtml + '</button>';
+      }).join("");
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      var titles = {
+        pos: "Sistem Kasir Pintar (Point of Sale)",
+        kds: "Kitchen Display System (Antrean Dapur & Bar)",
+        inventory: "Manajemen Inventori Menu & Bahan Baku",
+        promo: "Web Promosi UMKM, Voucher & Microsite Order",
+        analytics: "Laporan Keuangan & Analitik Penjualan",
+        settings: "Pengaturan Logo, Username, Pajak, WA & 1 Folder Drive"
+      };
+      document.getElementById("header-title").textContent = titles[tabId] || "RasaNusa F&B Suite";
+      renderShell();
+      renderCurrentView();
+    }
+
+    function renderCurrentView() {
+      var container = document.getElementById("view-container");
+      if (!container) return;
+      if (currentTab === "pos") renderPosView(container);
+      else if (currentTab === "kds") renderKdsView(container);
+      else if (currentTab === "inventory") renderInventoryView(container);
+      else if (currentTab === "promo") renderPromoView(container);
+      else if (currentTab === "analytics") renderAnalyticsView(container);
+      else if (currentTab === "settings") renderSettingsView(container);
+    }
+
+    // --- 3. RENDER 6 MODUL UTAMA ---
+    function renderPosView(el) {
+      var cats = ["Semua", "Makanan Utama", "Minuman", "Camilan"];
+      var filtered = (APP.products || []).filter(function(p) {
+        var mCat = posCategory === "Semua" || p.category === posCategory;
+        var mSearch = !posSearch || p.name.toLowerCase().indexOf(posSearch.toLowerCase()) !== -1;
+        return mCat && mSearch;
+      });
+
+      var sub = cart.reduce(function(s, i) { return s + (i.price * i.qty); }, 0);
+      var disc = 0;
+      if (posPromo) {
+        var pr = (APP.promos || []).find(function(x) { return x.code === posPromo && x.active && sub >= x.minOrder; });
+        if (pr) disc = pr.type === "PERCENT" ? Math.round(sub * pr.value / 100) : pr.value;
+      }
+      var tax = APP.posConfig.enableTax ? Math.round(Math.max(0, sub - disc) * (APP.posConfig.taxRate / 100)) : 0;
+      var grand = Math.max(0, sub - disc + tax);
+
+      var catButtons = cats.map(function(c) {
+        var act = posCategory === c ? "bg-slate-900 text-white" : "bg-white text-slate-600 border border-slate-200";
+        return '<button data-action="set-pos-cat" data-cat="' + c + '" class="px-3 py-2 rounded-xl text-xs font-bold ' + act + '">' + c + '</button>';
+      }).join("");
+
+      var prodCards = filtered.map(function(p) {
+        var inC = cart.find(function(c) { return c.id === p.id; });
+        return '<div data-action="add-pos-cart" data-id="' + p.id + '" class="cursor-pointer bg-white rounded-2xl border ' + (inC ? "border-orange-500 ring-2 ring-orange-500/20" : "border-slate-200 hover:border-orange-400") + ' p-4 flex flex-col justify-between transition shadow-sm">' +
+          '<div><div class="flex justify-between items-start mb-2"><div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">' + p.emoji + '</div>' +
+          '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ' + (p.stock <= p.minStock ? "bg-amber-100 text-amber-800" : "bg-emerald-50 text-emerald-700") + '">Stok: ' + p.stock + ' ' + p.unit + '</span></div>' +
+          '<div class="text-[10px] font-bold uppercase text-slate-400">' + p.category + '</div>' +
+          '<h4 class="font-bold text-slate-900 text-sm mt-0.5">' + p.name + '</h4>' +
+          '<p class="text-[11px] text-slate-500 mt-1">' + (p.desc || "") + '</p></div>' +
+          '<div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between"><span class="font-extrabold text-slate-900 text-sm">' + formatIDR(p.price) + '</span>' +
+          (inC ? '<span class="px-2 py-1 rounded-lg bg-orange-500 text-white text-[11px] font-bold">✓ ' + inC.qty + 'x</span>' : '<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-bold">+ Tambah</span>') +
+          '</div></div>';
+      }).join("");
+
+      var cartHtml = cart.length === 0 ? '<div class="py-10 text-center text-xs text-slate-400">Keranjang masih kosong. Klik menu di sebelah kiri.</div>' : cart.map(function(i) {
+        return '<div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">' +
+          '<div class="text-xs font-bold text-slate-900">' + i.emoji + ' ' + i.name + '<div class="text-[10px] text-slate-500 font-normal">' + formatIDR(i.price) + '</div></div>' +
+          '<div class="flex items-center gap-1.5"><button data-action="upd-pos-qty" data-id="' + i.id + '" data-delta="-1" class="w-6 h-6 rounded bg-white border font-bold text-xs">-</button>' +
+          '<span class="text-xs font-extrabold px-1">' + i.qty + '</span>' +
+          '<button data-action="upd-pos-qty" data-id="' + i.id + '" data-delta="1" class="w-6 h-6 rounded bg-white border font-bold text-xs">+</button>' +
+          '<span class="text-xs font-extrabold w-20 text-right">' + formatIDR(i.price * i.qty) + '</span></div></div>';
+      }).join("");
+
+      var promoOptions = '<option value="">-- Tanpa Promo Diskon --</option>' + (APP.promos || []).filter(function(p){ return p.active; }).map(function(p) {
+        return '<option value="' + p.code + '" ' + (posPromo === p.code ? "selected" : "") + '>' + p.code + " — " + p.title + '</option>';
+      }).join("");
+
+      el.innerHTML = '<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">' +
+        '<div class="lg:col-span-2 space-y-4">' +
+          '<div class="flex flex-col sm:flex-row gap-2.5"><input id="pos-search-input" type="text" value="' + posSearch + '" placeholder="Cari menu makanan, minuman, kopi..." class="flex-1 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs" /><div class="flex gap-1.5 flex-wrap">' + catButtons + '</div></div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5">' + prodCards + '</div>' +
+        '</div>' +
+        '<div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3 sticky top-4">' +
+          '<div class="flex items-center justify-between border-b pb-2.5"><h3 class="font-extrabold text-sm">🧾 Detail Pesanan Kasir</h3><button data-action="clear-pos-cart" class="text-[11px] text-red-600 font-bold">Kosongkan</button></div>' +
+          '<div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">' +
+            ["Dine-In", "Takeaway", "Delivery"].map(function(t) { return '<button data-action="set-order-type" data-type="' + t + '" class="py-1.5 rounded-lg ' + (posOrderType === t ? "bg-white shadow text-slate-900" : "text-slate-500") + '">' + t + '</button>'; }).join("") +
+          '</div>' +
+          '<div class="grid grid-cols-3 gap-2"><input id="pos-cust-input" type="text" value="' + posCustomer + '" placeholder="Nama Pelanggan" class="col-span-2 px-3 py-1.5 border rounded-lg text-xs font-semibold" /><input id="pos-table-input" type="text" value="' + posTable + '" placeholder="Meja" class="px-2 py-1.5 border rounded-lg text-xs font-bold text-center" /></div>' +
+          '<div><label class="text-[10px] font-bold text-emerald-700 block mb-1">📱 No. WhatsApp Pelanggan (Kirim Struk & Notif Dapur)</label><input id="pos-phone-input" type="tel" value="' + posPhone + '" placeholder="081234567890" class="w-full px-3 py-1.5 border border-emerald-200 bg-emerald-50/40 rounded-lg text-xs font-bold" /></div>' +
+          '<div class="space-y-2 max-h-56 overflow-y-auto">' + cartHtml + '</div>' +
+          '<div><label class="text-[10px] font-bold text-slate-500 block mb-1">🏷️ Kode Voucher Promo</label><select id="pos-promo-select" class="w-full px-3 py-1.5 border rounded-lg text-xs font-semibold">' + promoOptions + '</select></div>' +
+          '<div class="border-t pt-2.5 space-y-1 text-xs">' +
+            '<div class="flex justify-between text-slate-500"><span>Subtotal</span><span>' + formatIDR(sub) + '</span></div>' +
+            (disc > 0 ? '<div class="flex justify-between text-emerald-600 font-bold"><span>Diskon Promo</span><span>- ' + formatIDR(disc) + '</span></div>' : "") +
+            '<div class="flex justify-between text-slate-500"><span>Pajak PB1 (' + (APP.posConfig.enableTax ? APP.posConfig.taxRate : 0) + '%)</span><span>' + formatIDR(tax) + '</span></div>' +
+            '<div class="flex justify-between text-base font-extrabold text-slate-900 pt-1 border-t"><span>Total Tagihan</span><span class="text-orange-600">' + formatIDR(grand) + '</span></div>' +
+          '</div>' +
+          '<div class="grid grid-cols-2 gap-1.5 text-xs font-bold">' +
+            ["QRIS", "Tunai", "Debit/Transfer", "E-Wallet"].map(function(m) { return '<button data-action="set-payment" data-method="' + m + '" class="py-2 rounded-xl border ' + (posPayment === m ? "bg-orange-50 border-orange-500 text-orange-700" : "border-slate-200 text-slate-600") + '">' + m + '</button>'; }).join("") +
+          '</div>' +
+          '<button data-action="checkout-pos" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-md">✅ Bayar & Kirim ke Antrean Dapur (' + formatIDR(grand) + ')</button>' +
+        '</div></div>';
+    }
+
+    function renderKdsView(el) {
+      var cards = (APP.orders || []).map(function(o) {
+        var bCls = o.status === "Baru Masuk" ? "border-rose-500 bg-rose-50/30" : o.status === "Sedang Dimasak" ? "border-amber-500 bg-amber-50/30" : o.status === "Siap Disajikan" ? "border-emerald-500 bg-emerald-50/30" : "border-slate-200 opacity-75";
+        var itemsHtml = (o.items || []).map(function(i) {
+          return '<div class="flex justify-between text-xs bg-white p-2 rounded-lg border border-slate-100"><span class="font-bold">' + (i.emoji || "🍽️") + " " + i.name + '</span><span class="px-2 py-0.5 rounded bg-slate-900 text-white font-extrabold">x' + i.qty + '</span></div>';
+        }).join("");
+        var nextBtn = "";
+        if (o.status === "Baru Masuk") nextBtn = '<button data-action="adv-order" data-id="' + o.id + '" data-status="Sedang Dimasak" class="flex-1 py-2 rounded-xl bg-amber-500 text-white text-xs font-extrabold">👨‍🍳 Mulai Masak</button>';
+        else if (o.status === "Sedang Dimasak") nextBtn = '<button data-action="adv-order" data-id="' + o.id + '" data-status="Siap Disajikan" class="flex-1 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold">🔔 Tandai Siap & WA</button>';
+        else if (o.status === "Siap Disajikan") nextBtn = '<button data-action="adv-order" data-id="' + o.id + '" data-status="Selesai" class="flex-1 py-2 rounded-xl bg-slate-900 text-white text-xs font-extrabold">✅ Selesaikan</button>';
+
+        return '<div class="rounded-2xl border-2 p-4 bg-white shadow-sm flex flex-col justify-between space-y-3 ' + bCls + '">' +
+          '<div><div class="flex justify-between items-start border-b pb-2"><div><span class="font-extrabold text-sm">' + o.id + '</span> <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-bold">' + o.source + '</span>' +
+          '<p class="text-xs font-bold text-slate-800 mt-0.5">' + o.customerName + ' (' + o.orderType + ')</p>' +
+          (o.customerPhone ? '<p class="text-[11px] text-emerald-700 font-semibold">📱 WA: ' + o.customerPhone + '</p>' : "") + '</div>' +
+          '<span class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-white border">' + o.status + '</span></div>' +
+          '<div class="py-2.5 space-y-1.5">' + itemsHtml + '</div></div>' +
+          '<div class="space-y-1.5 pt-2 border-t"><div class="flex gap-2"><button data-action="open-receipt" data-id="' + o.id + '" class="px-3 py-2 rounded-xl border text-xs font-bold">🧾 Struk</button>' + nextBtn + '</div>' +
+          '<button data-action="send-wa" data-id="' + o.id + '" data-mode="ready" class="w-full py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold">💬 Kirim WA: Pesanan Siap Diambil</button></div></div>';
+      }).join("");
+      el.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">' + cards + '</div>';
+    }
+
+    function renderInventoryView(el) {
+      var rows = (APP.products || []).map(function(p) {
+        return '<tr class="border-b text-xs"><td class="py-3 px-4 font-bold">' + p.emoji + " " + p.name + '</td><td class="py-3 px-4">' + p.category + '</td><td class="py-3 px-4">' + formatIDR(p.cost) + '</td><td class="py-3 px-4 font-bold">' + formatIDR(p.price) + '</td><td class="py-3 px-4 font-extrabold">' + p.stock + " " + p.unit + '</td>' +
+          '<td class="py-3 px-4 text-right space-x-1"><button data-action="adj-stock" data-id="' + p.id + '" data-delta="-1" class="px-2 py-1 border rounded font-bold">-1</button><button data-action="adj-stock" data-id="' + p.id + '" data-delta="5" class="px-2.5 py-1 bg-slate-100 rounded font-bold">+5</button><button data-action="adj-stock" data-id="' + p.id + '" data-delta="15" class="px-3 py-1 bg-orange-500 text-white rounded font-bold">+15 Restock</button></td></tr>';
+      }).join("");
+      el.innerHTML = '<div class="space-y-4"><div class="bg-white p-4 rounded-2xl border flex flex-wrap items-center justify-between gap-3"><h3 class="font-extrabold text-sm">📦 Daftar Stok Menu & HPP</h3>' +
+        '<div class="flex gap-2 flex-wrap"><input id="new-m-name" placeholder="Nama Menu Baru..." class="px-3 py-1.5 border rounded-xl text-xs" /><input id="new-m-price" type="number" placeholder="Harga Jual (Rp)" class="w-36 px-3 py-1.5 border rounded-xl text-xs" /><button data-action="quick-add-menu" class="px-4 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold">+ Tambah Menu</button></div></div>' +
+        '<div class="bg-white rounded-2xl border overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-50 border-b text-[11px] uppercase text-slate-500"><tr><th class="py-3 px-4">Menu</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4">Modal</th><th class="py-3 px-4">Harga Jual</th><th class="py-3 px-4">Stok</th><th class="py-3 px-4 text-right">Aksi Cepat</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    }
+
+    function renderPromoView(el) {
+      var pCards = (APP.products || []).map(function(p) {
+        return '<div data-action="add-web-cart" data-id="' + p.id + '" class="cursor-pointer p-3.5 rounded-2xl border border-slate-200 hover:border-orange-500 bg-white flex items-center justify-between gap-3 transition">' +
+          '<div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-2xl">' + p.emoji + '</div><div><h4 class="font-bold text-sm text-slate-900">' + p.name + '</h4><p class="text-[11px] text-slate-500">' + p.category + " • Stok: " + p.stock + '</p><p class="font-extrabold text-orange-600 text-sm">' + formatIDR(p.price) + '</p></div></div>' +
+          '<span class="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold">+ Pesan</span></div>';
+      }).join("");
+      var wSub = webCart.reduce(function(s, i) { return s + (i.price * i.qty); }, 0);
+      var wList = webCart.length === 0 ? "Belum ada menu dipilih." : webCart.map(function(i) { return '<div class="flex justify-between bg-slate-50 p-2 rounded-lg text-xs"><span>' + i.emoji + " " + i.name + " (x" + i.qty + ')</span><b>' + formatIDR(i.price * i.qty) + '</b></div>'; }).join("");
+
+      el.innerHTML = '<div class="space-y-5"><div class="bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 text-white px-4 py-2.5 rounded-2xl text-center text-xs font-bold">' + APP.storeProfile.bannerText + '</div>' +
+        '<div class="bg-slate-900 text-white p-6 rounded-3xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"><div class="flex items-center gap-4">' + getLogoHtml("w-16 h-16 text-3xl") + '<div><h2 class="text-xl font-extrabold">' + APP.storeProfile.name + '</h2><p class="text-xs text-slate-300">' + APP.storeProfile.tagline + '</p><p class="text-[11px] text-orange-400 mt-1">📍 ' + APP.storeProfile.address + " • ⏰ " + APP.storeProfile.openHours + '</p></div></div></div>' +
+        '<div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3.5">' + pCards + '</div>' +
+        '<div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3 h-fit sticky top-4"><h3 class="font-extrabold text-sm border-b pb-2">🛒 Checkout Pesanan Online</h3><div class="space-y-1.5 text-xs text-slate-500">' + wList + '</div>' +
+        '<div class="flex justify-between font-extrabold text-sm pt-2 border-t"><span>Total</span><span class="text-orange-600">' + formatIDR(wSub) + '</span></div>' +
+        '<input id="web-c-name" placeholder="Nama Pemesan..." class="w-full px-3 py-2 border rounded-xl text-xs" />' +
+        '<input id="web-c-phone" placeholder="Nomor WhatsApp (0812...)" class="w-full px-3 py-2 border rounded-xl text-xs" />' +
+        '<input id="web-c-addr" placeholder="Nomor Meja / Alamat Pengiriman..." class="w-full px-3 py-2 border rounded-xl text-xs" />' +
+        '<button data-action="submit-web-order" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-xs shadow">🚀 Kirim Pesanan ke Dapur & WhatsApp</button></div></div></div>';
+    }
+
+    function renderAnalyticsView(el) {
+      var totalRev = (APP.orders || []).reduce(function(s, o) { return s + (Number(o.total) || 0); }, 0);
+      var rows = (APP.orders || []).map(function(o) {
+        return '<tr class="border-b text-xs"><td class="py-3 px-4 font-bold">' + o.id + '</td><td class="py-3 px-4"><b>' + o.customerName + '</b><div class="text-[10px] text-slate-400">' + o.time + " • " + o.orderType + '</div></td><td class="py-3 px-4">' + o.source + '</td><td class="py-3 px-4">' + o.paymentMethod + '</td><td class="py-3 px-4 font-extrabold">' + formatIDR(o.total) + '</td>' +
+          '<td class="py-3 px-4 text-right space-x-1"><button data-action="send-wa" data-id="' + o.id + '" data-mode="receipt" class="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 font-bold">💬 WA</button><button data-action="open-receipt" data-id="' + o.id + '" class="px-2.5 py-1 rounded border font-bold">🧾 Struk</button></td></tr>';
+      }).join("");
+      el.innerHTML = '<div class="space-y-5"><div class="grid grid-cols-1 sm:grid-cols-3 gap-4">' +
+        '<div class="bg-white p-5 rounded-2xl border"><span class="text-xs text-slate-500 font-bold">Total Omzet Kotor</span><p class="text-2xl font-extrabold text-slate-900 mt-1">' + formatIDR(totalRev) + '</p></div>' +
+        '<div class="bg-white p-5 rounded-2xl border"><span class="text-xs text-slate-500 font-bold">Total Transaksi</span><p class="text-2xl font-extrabold text-slate-900 mt-1">' + (APP.orders || []).length + ' Pesanan</p></div>' +
+        '<div class="bg-white p-5 rounded-2xl border"><span class="text-xs text-slate-500 font-bold">Lisensi Sistem</span><p class="text-sm font-extrabold text-orange-600 mt-1">Arraihan Academy</p><p class="text-[11px] text-slate-500">developwebapp11@gmail.com</p></div></div>' +
+        '<div class="bg-white rounded-2xl border overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-50 border-b text-[11px] uppercase text-slate-500"><tr><th class="py-3 px-4">ID Order</th><th class="py-3 px-4">Pelanggan</th><th class="py-3 px-4">Sumber</th><th class="py-3 px-4">Metode</th><th class="py-3 px-4">Total</th><th class="py-3 px-4 text-right">Aksi</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    }
+
+    function renderSettingsView(el) {
+      var presetBtns = [
+        { id: "utensils", emo: "🍴" }, { id: "coffee", emo: "☕" }, { id: "noodle", emo: "🍜" },
+        { id: "bakery", emo: "🥐" }, { id: "boba", emo: "🧋" }, { id: "grill", emo: "🔥" }
+      ].map(function(p) {
+        var act = APP.storeProfile.logoType === "preset" && APP.storeProfile.logoPreset === p.id;
+        return '<button data-action="set-logo-preset" data-preset="' + p.id + '" class="w-10 h-10 rounded-xl border text-lg ' + (act ? "border-orange-500 bg-orange-50 ring-2 ring-orange-500/20" : "border-slate-200") + '">' + p.emo + '</button>';
+      }).join("");
+
+      el.innerHTML = '<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">' +
+        '<div class="bg-white p-6 rounded-2xl border space-y-4"><h3 class="font-extrabold text-sm border-b pb-2">🏪 1. Pengaturan Logo & Profil Brand Toko</h3>' +
+          '<div class="flex items-center gap-4 bg-slate-900 text-white p-4 rounded-2xl">' + getLogoHtml("w-14 h-14 text-2xl") + '<div><div class="font-extrabold text-sm">' + APP.storeProfile.name + '</div><div class="text-xs text-slate-400">' + APP.storeProfile.tagline + '</div></div></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Pilih Ikon Preset Logo</label><div class="flex gap-2 flex-wrap">' + presetBtns + '</div></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Atau Upload File Gambar Logo Baru</label><input id="logo-file-input" type="file" accept="image/*" class="w-full text-xs" /></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Nama Toko / Restoran</label><input id="set-name" value="' + APP.storeProfile.name + '" class="w-full px-3 py-2 border rounded-xl font-bold" /></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Slogan / Tagline</label><input id="set-tag" value="' + APP.storeProfile.tagline + '" class="w-full px-3 py-2 border rounded-xl" /></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Alamat Outlet</label><input id="set-addr" value="' + APP.storeProfile.address + '" class="w-full px-3 py-2 border rounded-xl" /></div>' +
+          '<div class="grid grid-cols-2 gap-2 text-xs"><div><label class="font-bold block">No. WhatsApp Kasir</label><input id="set-wa" value="' + APP.storeProfile.whatsapp + '" class="w-full px-3 py-2 border rounded-xl font-bold" /></div><div><label class="font-bold block">Pajak PB1 (%)</label><input id="set-tax" type="number" value="' + APP.posConfig.taxRate + '" class="w-full px-3 py-2 border rounded-xl font-bold" /></div></div>' +
+          '<button data-action="save-brand-settings" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs">💾 Simpan Profil, Logo & Pajak</button></div>' +
+        '<div class="bg-white p-6 rounded-2xl border space-y-4"><h3 class="font-extrabold text-sm border-b pb-2">🔐 2. Pengaturan Username, Password & Cloud Drive</h3>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Nama Kasir Aktif</label><input id="set-u-name" value="' + activeUser.name + '" class="w-full px-3 py-2 border rounded-xl font-bold" /></div>' +
+          '<div class="grid grid-cols-2 gap-2 text-xs"><div><label class="font-bold block">Username Login</label><input id="set-u-user" value="' + activeUser.username + '" class="w-full px-3 py-2 border rounded-xl font-bold text-orange-600" /></div><div><label class="font-bold block">PIN Cepat (4 Digit)</label><input id="set-u-pin" maxlength="4" value="' + activeUser.pin + '" class="w-full px-3 py-2 border rounded-xl font-bold text-center" /></div></div>' +
+          '<div class="space-y-1.5 text-xs"><label class="font-bold block">Password Login</label><input id="set-u-pass" type="text" value="' + activeUser.password + '" class="w-full px-3 py-2 border rounded-xl font-bold" /></div>' +
+          '<button data-action="save-user-settings" class="w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs">🔐 Simpan Username & Password</button>' +
+          '<div class="space-y-1.5 text-xs pt-2 border-t"><label class="font-bold block">URL Web App Google Apps Script (/exec)</label><input id="set-gas-url" value="' + (APP.cloudConfig.gasWebAppUrl || "") + '" class="w-full px-3 py-2 border rounded-xl font-mono text-[11px]" /></div>' +
+          '<div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs space-y-1"><div class="font-extrabold text-emerald-900">☁️ Penyimpanan 1 Folder Google Drive Aktif</div><p class="text-[11px] text-emerald-800">Folder Utama: <b>/' + APP.cloudConfig.rootFolderName + '/</b></p><p class="text-[11px] text-emerald-800">Licensed by <b>Arraihan Academy (developwebapp11@gmail.com)</b></p></div></div></div>';
+    }
+
+    // --- 4. MODAL STRUK, WHATSAPP & KUNCI KASIR ---
+    function openReceiptModal(orderId) {
+      var o = (APP.orders || []).find(function(x) { return x.id === orderId; });
+      if (!o) return;
+      var itemsRows = (o.items || []).map(function(i) {
+        return '<div class="flex justify-between"><span>' + i.qty + "x " + i.name + '</span><b>' + formatIDR(i.price * i.qty) + '</b></div>';
+      }).join("");
+      var m = document.getElementById("modal-container");
+      m.innerHTML = '<div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-3 text-xs">' +
+        '<div class="text-center border-b border-dashed pb-3"><div class="flex justify-center mb-2">' + getLogoHtml("w-12 h-12 text-xl") + '</div><h3 class="font-extrabold text-sm">' + APP.storeProfile.name + '</h3><p class="text-[11px] text-slate-500">' + APP.storeProfile.address + '</p><p class="text-[10px] text-slate-400 mt-1">' + o.id + " • " + o.time + '</p></div>' +
+        '<div class="space-y-1 border-b border-dashed pb-2"><div class="flex justify-between"><span>Pelanggan:</span><b>' + o.customerName + '</b></div><div class="flex justify-between"><span>Tipe:</span><b>' + o.orderType + (o.tableNumber !== "-" ? " (" + o.tableNumber + ")" : "") + '</b></div><div class="flex justify-between"><span>Metode:</span><b>' + o.paymentMethod + '</b></div></div>' +
+        '<div class="space-y-1.5 border-b border-dashed pb-2">' + itemsRows + '</div>' +
+        '<div class="space-y-1"><div class="flex justify-between"><span>Subtotal</span><span>' + formatIDR(o.subtotal || o.total) + '</span></div><div class="flex justify-between"><span>Pajak PB1</span><span>' + formatIDR(o.tax || 0) + '</span></div><div class="flex justify-between font-extrabold text-sm pt-1 border-t"><span>TOTAL LUNAS</span><span class="text-orange-600">' + formatIDR(o.total) + '</span></div></div>' +
+        '<div class="text-center pt-2 border-t border-dashed text-[10px] text-slate-400"><div>' + (APP.posConfig.receiptFooter || "Terima kasih!") + '</div><div class="font-bold text-slate-600 mt-1">Licensed by Arraihan Academy (developwebapp11@gmail.com)</div></div>' +
+        '<div class="space-y-2 pt-2 no-print"><button data-action="send-wa" data-id="' + o.id + '" data-mode="receipt" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold">💬 Kirim Struk ke WhatsApp</button><div class="grid grid-cols-2 gap-2"><button data-action="print-receipt" class="py-2 rounded-xl bg-slate-900 text-white font-bold">🖨️ Cetak</button><button data-action="close-modal" class="py-2 rounded-xl border font-bold">Tutup</button></div></div></div>';
+      m.classList.remove("hidden");
+    }
+
+    function sendWhatsAppOrder(orderId, mode) {
+      var o = (APP.orders || []).find(function(x) { return x.id === orderId; });
+      if (!o) return;
+      var phone = normalizeWA(o.customerPhone || posPhone || APP.storeProfile.whatsapp);
+      var itemLines = (o.items || []).map(function(i) { return "• " + i.name + " (" + i.qty + "x) = " + formatIDR(i.price * i.qty); }).join(NL);
+      var msg = mode === "ready"
+        ? "🔔 *PESANAN SIAP DIAMBIL / DISAJIKAN!*" + NL + "Halo Kak *" + o.customerName + "*, pesanan *" + o.id + "* di *" + APP.storeProfile.name + "* sudah siap!" + NL + NL + itemLines + NL + NL + "Selamat menikmati! 🙏"
+        : "🧾 *STRUK DIGITAL - " + APP.storeProfile.name + "*" + NL + "No. Order: *" + o.id + "*" + NL + "Pelanggan: " + o.customerName + NL + "------------------------" + NL + itemLines + NL + "------------------------" + NL + "*TOTAL: " + formatIDR(o.total) + " (" + o.paymentMethod + ")*" + NL + "Terima kasih telah berbelanja! 🙏";
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(msg), "_blank");
+    }
+
+    function openLockModal() {
+      var m = document.getElementById("modal-container");
+      m.innerHTML = '<div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4 text-xs">' +
+        '<div class="text-center space-y-1"><div class="flex justify-center mb-2">' + getLogoHtml("w-12 h-12 text-xl") + '</div><h3 class="font-extrabold text-base">🔒 Kunci Layar / Ganti Shift Kasir</h3><p class="text-slate-500">Masukkan Username & Password atau PIN Staf</p></div>' +
+        '<div class="space-y-2.5"><input id="lock-user" value="' + activeUser.username + '" placeholder="Username (nadia / admin / dapur)" class="w-full px-3.5 py-2.5 border rounded-xl font-bold" /><input id="lock-pass" type="password" placeholder="Password atau PIN 4 Digit" class="w-full px-3.5 py-2.5 border rounded-xl font-bold" /><div id="lock-err" class="hidden text-red-600 font-bold">Username atau Password/PIN tidak cocok!</div></div>' +
+        '<div class="flex gap-2"><button data-action="unlock-login" class="flex-1 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold">🔓 Buka Kasir</button><button data-action="close-modal" class="px-4 py-2.5 rounded-xl border font-bold">Batal</button></div></div>';
+      m.classList.remove("hidden");
+    }
+
+    // --- 5. SINKRONISASI 1 FOLDER GOOGLE DRIVE & MODE OFFLINE ---
+    APP.offlineQueue = APP.offlineQueue || [];
+    function updateNetBadge() {
+      var b = document.getElementById("net-status-badge");
+      var qb = document.getElementById("queue-badge");
+      if (!b) return;
+      if (navigator.onLine) {
+        b.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold border bg-emerald-50 border-emerald-200 text-emerald-800";
+        b.textContent = "🟢 ONLINE";
+      } else {
+        b.className = "px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold border bg-amber-50 border-amber-300 text-amber-900";
+        b.textContent = "🟠 MODE OFFLINE";
+      }
+      if (qb) {
+        var qLen = (APP.offlineQueue || []).length;
+        qb.textContent = qLen > 0 ? "(" + qLen + ")" : "";
+      }
+    }
+
+    function sendOrderToCloud(ord) {
+      if (!navigator.onLine) {
+        APP.offlineQueue.push(ord.id);
+        saveStateLocal(); updateNetBadge(); return;
+      }
+      if (window.google && window.google.script && window.google.script.run) {
+        try { window.google.script.run.processAction("SAVE_ORDER", ord); } catch (e) {}
+      } else if (APP.cloudConfig && APP.cloudConfig.gasWebAppUrl) {
+        fetch(APP.cloudConfig.gasWebAppUrl, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "SAVE_ORDER", data: ord }) }).catch(function() {});
+      }
+    }
+
+    function syncToDrive() {
+      saveStateLocal();
+      if (window.google && window.google.script && window.google.script.run) {
+        try { window.google.script.run.processAction("SYNC_FULL_WORKSPACE", APP); } catch (e) {}
+      } else if (APP.cloudConfig && APP.cloudConfig.gasWebAppUrl) {
+        fetch(APP.cloudConfig.gasWebAppUrl, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "SYNC_ALL_TO_SINGLE_FOLDER", data: APP }) }).catch(function() {});
+      }
+      APP.offlineQueue = []; saveStateLocal(); updateNetBadge();
+      showToast("Data disimpan ke 1 Folder Google Drive (/" + APP.cloudConfig.rootFolderName + "/)!");
+    }
+
+    // --- 6. GLOBAL EVENT DELEGATION (BEBAS MASALAH KUTIPAN BERSARANG) ---
+    document.addEventListener("click", function(ev) {
+      var btn = ev.target.closest("[data-action]");
+      if (!btn) return;
+      var act = btn.getAttribute("data-action");
+
+      if (act === "switch-tab") { switchTab(btn.getAttribute("data-tab")); }
+      else if (act === "set-pos-cat") { posCategory = btn.getAttribute("data-cat"); renderCurrentView(); }
+      else if (act === "add-pos-cart") {
+        var id = btn.getAttribute("data-id");
+        var p = (APP.products || []).find(function(x) { return x.id === id; });
+        if (!p || p.stock <= 0) { showToast("Stok menu habis!"); return; }
+        var ex = cart.find(function(c) { return c.id === id; });
+        if (ex) ex.qty += 1; else cart.push({ id: p.id, name: p.name, price: p.price, qty: 1, emoji: p.emoji });
+        renderShell(); renderCurrentView();
+      }
+      else if (act === "upd-pos-qty") {
+        var qId = btn.getAttribute("data-id");
+        var delta = Number(btn.getAttribute("data-delta") || 0);
+        cart = cart.map(function(c) { return c.id === qId ? Object.assign({}, c, { qty: c.qty + delta }) : c; }).filter(function(c) { return c.qty > 0; });
+        renderShell(); renderCurrentView();
+      }
+      else if (act === "clear-pos-cart") { cart = []; renderShell(); renderCurrentView(); }
+      else if (act === "set-order-type") { posOrderType = btn.getAttribute("data-type"); renderCurrentView(); }
+      else if (act === "set-payment") { posPayment = btn.getAttribute("data-method"); renderCurrentView(); }
+      else if (act === "checkout-pos") {
+        if (cart.length === 0) { showToast("Keranjang masih kosong!"); return; }
+        var sub = cart.reduce(function(s, i) { return s + (i.price * i.qty); }, 0);
+        var disc = 0;
+        if (posPromo) {
+          var pr = (APP.promos || []).find(function(x) { return x.code === posPromo && x.active && sub >= x.minOrder; });
+          if (pr) disc = pr.type === "PERCENT" ? Math.round(sub * pr.value / 100) : pr.value;
+        }
+        var tax = APP.posConfig.enableTax ? Math.round(Math.max(0, sub - disc) * (APP.posConfig.taxRate / 100)) : 0;
+        var grand = Math.max(0, sub - disc + tax);
+        var now = new Date();
+        var timeStr = String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0") + " WIB";
+        var newOrd = {
+          id: "ORD-" + Math.floor(1000 + Math.random() * 9000),
+          customerName: posCustomer || "Pelanggan Umum",
+          customerPhone: posPhone || "",
+          cashierName: activeUser.name,
+          orderType: posOrderType,
+          tableNumber: posOrderType === "Dine-In" ? posTable : "-",
+          source: "POS Kasir",
+          time: timeStr,
+          status: "Baru Masuk",
+          paymentMethod: posPayment,
+          subtotal: sub, discount: disc, tax: tax, total: grand,
+          items: cart.slice()
+        };
+        APP.products = (APP.products || []).map(function(p) {
+          var ci = cart.find(function(c) { return c.id === p.id; });
+          return ci ? Object.assign({}, p, { stock: Math.max(0, p.stock - ci.qty) }) : p;
+        });
+        APP.orders.unshift(newOrd); cart = []; saveStateLocal(); sendOrderToCloud(newOrd);
+        renderShell(); renderCurrentView(); openReceiptModal(newOrd.id);
+        showToast("Transaksi " + newOrd.id + " berhasil diproses!");
+      }
+      else if (act === "adv-order") {
+        var oId = btn.getAttribute("data-id");
+        var nextSt = btn.getAttribute("data-status");
+        APP.orders = (APP.orders || []).map(function(o) { return o.id === oId ? Object.assign({}, o, { status: nextSt }) : o; });
+        saveStateLocal(); renderShell(); renderCurrentView();
+        showToast("Status " + oId + " diperbarui: " + nextSt);
+        if (nextSt === "Siap Disajikan") sendWhatsAppOrder(oId, "ready");
+      }
+      else if (act === "open-receipt") { openReceiptModal(btn.getAttribute("data-id")); }
+      else if (act === "send-wa") { sendWhatsAppOrder(btn.getAttribute("data-id"), btn.getAttribute("data-mode")); }
+      else if (act === "print-receipt") { window.print(); }
+      else if (act === "close-modal") { document.getElementById("modal-container").classList.add("hidden"); }
+      else if (act === "open-lock") { openLockModal(); }
+      else if (act === "unlock-login") {
+        var uVal = (document.getElementById("lock-user").value || "").trim().toLowerCase();
+        var pVal = (document.getElementById("lock-pass").value || "").trim();
+        var matched = (APP.staffList || []).find(function(s) { return s.username.toLowerCase() === uVal && (s.password === pVal || s.pin === pVal); });
+        if (!matched) { document.getElementById("lock-err").classList.remove("hidden"); return; }
+        activeUser = matched; document.getElementById("modal-container").classList.add("hidden");
+        renderShell(); renderCurrentView(); showToast("Selamat bertugas, " + activeUser.name + "!");
+      }
+      else if (act === "adj-stock") {
+        var sId = btn.getAttribute("data-id");
+        var dVal = Number(btn.getAttribute("data-delta") || 0);
+        APP.products = (APP.products || []).map(function(p) { return p.id === sId ? Object.assign({}, p, { stock: Math.max(0, p.stock + dVal) }) : p; });
+        saveStateLocal(); renderShell(); renderCurrentView(); showToast("Stok diperbarui!");
+      }
+      else if (act === "quick-add-menu") {
+        var nm = (document.getElementById("new-m-name").value || "").trim();
+        var prc = parseInt(document.getElementById("new-m-price").value || "20000", 10);
+        if (!nm) { showToast("Isi nama menu baru!"); return; }
+        APP.products.unshift({ id: "m" + Date.now(), name: nm, category: "Makanan Utama", price: prc, cost: Math.round(prc * 0.45), stock: 25, minStock: 5, unit: "Porsi", emoji: "🍲", desc: "Menu spesial " + APP.storeProfile.name });
+        saveStateLocal(); renderCurrentView(); showToast("Menu " + nm + " berhasil ditambahkan!");
+      }
+      else if (act === "add-web-cart") {
+        var wId = btn.getAttribute("data-id");
+        var wp = (APP.products || []).find(function(x) { return x.id === wId; });
+        if (!wp) return;
+        var wf = webCart.find(function(x) { return x.id === wId; });
+        if (wf) wf.qty += 1; else webCart.push({ id: wp.id, name: wp.name, price: wp.price, qty: 1, emoji: wp.emoji });
+        renderCurrentView(); showToast(wp.name + " ditambah ke pesanan online!");
+      }
+      else if (act === "submit-web-order") {
+        if (webCart.length === 0) { showToast("Pilih minimal 1 menu terlebih dahulu!"); return; }
+        var wName = document.getElementById("web-c-name").value || "Pelanggan Online";
+        var wPhone = document.getElementById("web-c-phone").value || "0812000000";
+        var wAddr = document.getElementById("web-c-addr").value || "Online Delivery";
+        var wSub = webCart.reduce(function(s, i) { return s + (i.price * i.qty); }, 0);
+        var wOrd = { id: "WEB-" + Math.floor(1000 + Math.random() * 9000), customerName: wName + " (Web)", customerPhone: wPhone, orderType: "Delivery", tableNumber: wAddr, source: "Web Promosi", time: "Baru Saja", status: "Baru Masuk", paymentMethod: "QRIS", subtotal: wSub, discount: 0, tax: 0, total: wSub, items: webCart.slice() };
+        APP.orders.unshift(wOrd); webCart = []; saveStateLocal(); sendOrderToCloud(wOrd); renderShell(); renderCurrentView();
+        sendWhatsAppOrder(wOrd.id, "receipt");
+      }
+      else if (act === "set-logo-preset") {
+        APP.storeProfile.logoType = "preset";
+        APP.storeProfile.logoPreset = btn.getAttribute("data-preset");
+        saveStateLocal(); renderShell(); renderCurrentView(); showToast("Ikon logo diperbarui!");
+      }
+      else if (act === "save-brand-settings") {
+        APP.storeProfile.name = document.getElementById("set-name").value || APP.storeProfile.name;
+        APP.storeProfile.tagline = document.getElementById("set-tag").value || APP.storeProfile.tagline;
+        APP.storeProfile.address = document.getElementById("set-addr").value || APP.storeProfile.address;
+        APP.storeProfile.whatsapp = document.getElementById("set-wa").value || APP.storeProfile.whatsapp;
+        APP.posConfig.taxRate = Number(document.getElementById("set-tax").value || 0);
+        APP.posConfig.enableTax = APP.posConfig.taxRate > 0;
+        saveStateLocal(); syncToDrive(); renderShell(); renderCurrentView();
+        showToast("Profil Toko, Logo & Pajak berhasil disimpan!");
+      }
+      else if (act === "save-user-settings") {
+        activeUser.name = document.getElementById("set-u-name").value || activeUser.name;
+        activeUser.username = document.getElementById("set-u-user").value || activeUser.username;
+        activeUser.pin = document.getElementById("set-u-pin").value || activeUser.pin;
+        activeUser.password = document.getElementById("set-u-pass").value || activeUser.password;
+        var gUrl = document.getElementById("set-gas-url");
+        if (gUrl) APP.cloudConfig.gasWebAppUrl = gUrl.value.trim();
+        saveStateLocal(); syncToDrive(); renderShell(); renderCurrentView();
+        showToast("Username, Password & URL Cloud berhasil disimpan!");
+      }
+      else if (act === "sync-drive") { syncToDrive(); }
+    });
+
+    document.addEventListener("input", function(ev) {
+      var id = ev.target.id;
+      if (id === "pos-search-input") { posSearch = ev.target.value; renderCurrentView(); document.getElementById("pos-search-input").focus(); }
+      else if (id === "pos-cust-input") { posCustomer = ev.target.value; }
+      else if (id === "pos-table-input") { posTable = ev.target.value; }
+      else if (id === "pos-phone-input") { posPhone = ev.target.value; }
+    });
+
+    document.addEventListener("change", function(ev) {
+      var id = ev.target.id;
+      if (id === "pos-promo-select") { posPromo = ev.target.value; renderCurrentView(); }
+      else if (id === "logo-file-input") {
+        var file = ev.target.files && ev.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          APP.storeProfile.logoType = "image";
+          APP.storeProfile.logoImageUrl = e.target.result;
+          saveStateLocal(); renderShell(); renderCurrentView();
+          showToast("Logo toko berhasil diunggah!");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    window.addEventListener("online", updateNetBadge);
+    window.addEventListener("offline", updateNetBadge);
+
+    // INISIALISASI UTAMA SAAT HALAMAN DIMUAT
+    try { renderShell(); renderCurrentView(); } catch (err) { console.error(err); }
+  </script>
+</body>
+</html>
